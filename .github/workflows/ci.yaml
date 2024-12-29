@@ -1,0 +1,24 @@
+name: ci
+
+on:
+  push:
+  workflow_dispatch:
+
+jobs:
+  lint-and-test:
+    timeout-minutes: 15
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: extractions/setup-just@v2
+      - uses: actions/setup-go@v5
+        with:
+          go-version: '1.23.2'
+
+      - name: Lint
+        run: |
+          just lint
+
+      - name: Run Tests
+        run: |
+          just test
