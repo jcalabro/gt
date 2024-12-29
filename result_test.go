@@ -11,7 +11,7 @@ import (
 func TestResultType(t *testing.T) {
 	{
 		val := 123
-		res := gt.ResultOK(val)
+		res := gt.OK(val)
 		require.NoError(t, res.Err())
 		require.Equal(t, val, res.OK())
 
@@ -25,7 +25,7 @@ func TestResultType(t *testing.T) {
 
 	{
 		err := errors.New("test error")
-		res := gt.ResultErr[int](err)
+		res := gt.Err[int](err)
 		require.ErrorIs(t, res.Err(), err)
 
 		switch r := res.Match().(type) {

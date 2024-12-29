@@ -10,13 +10,13 @@ import (
 func TestOptionType(t *testing.T) {
 	{
 		val := 123
-		opt := gt.OptionSome(val)
+		opt := gt.Some(val)
 		require.True(t, opt.HasValue())
 		require.Equal(t, val, opt.Get())
 	}
 
 	{
-		opt := gt.OptionNone[any]()
+		opt := gt.None[any]()
 		require.False(t, opt.HasValue())
 
 		recoverCalled := false

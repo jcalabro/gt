@@ -1,6 +1,6 @@
 package gt
 
-// Carries a payload or an error, but never both (similar to Rust's Result type).
+// Carries a value or an error, but never both.
 type Result[T any] struct {
 	err  error
 	item T
@@ -28,12 +28,12 @@ func (r Result[T]) Match() any {
 	return r.item
 }
 
-// Sets the result payload to a successful result
-func ResultOK[T any](item T) Result[T] {
+// Sets the  payload to a successful result.
+func OK[T any](item T) Result[T] {
 	return Result[T]{item: item}
 }
 
-// Sets the result payload to an unsuccessful result
-func ResultErr[T any](err error) Result[T] {
+// Sets the payload to an unsuccessful result.
+func Err[T any](err error) Result[T] {
 	return Result[T]{err: err}
 }
