@@ -1,2 +1,1 @@
-# gt
-Go Types
+# Go Types
