@@ -1,6 +1,6 @@
 # Go Types
 
-[![ci](https://github.com/jcalabro/gt/actions/workflows/ci.yaml/badge.svg)](https://github.com/jcalabro/gt/actions/workflows/ci.yaml)
+[![GoDoc](https://pkg.go.dev/badge/github.com/jcalabro/gt?status.svg)](https://pkg.go.dev/github.com/jcalabro/gt)  [![ci](https://github.com/jcalabro/gt/actions/workflows/ci.yaml/badge.svg)](https://github.com/jcalabro/gt/actions/workflows/ci.yaml)
 
 Package gt ("go types") contains various small, simple helper utility types that I find useful for writing Go programs quickly.
 
