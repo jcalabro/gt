@@ -8,7 +8,7 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func TestResultTypes(t *testing.T) {
+func TestResultType(t *testing.T) {
 	{
 		val := 123
 		res := gt.ResultOK(val)

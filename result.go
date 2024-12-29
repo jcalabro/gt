@@ -2,30 +2,30 @@ package gt
 
 // Carries a payload or an error, but never both (similar to Rust's Result type).
 type Result[T any] struct {
-	item T
 	err  error
+	item T
 }
 
 // Returns the value of the Result. Panics if an error is set.
-func (res Result[T]) OK() T {
-	if res.err != nil {
-		panic("result error set, but Ok() called")
+func (r Result[T]) OK() T {
+	if r.err != nil {
+		panic("result error set, but Ok() was called")
 	}
-	return res.item
+	return r.item
 }
 
 // Returns the error of the Result, or nil if no error is set.
-func (res Result[T]) Err() error {
-	return res.err
+func (r Result[T]) Err() error {
+	return r.err
 }
 
 // Returns either the error or the value.
-func (res Result[T]) Match() any {
-	if res.err != nil {
-		return res.err
+func (r Result[T]) Match() any {
+	if r.err != nil {
+		return r.err
 	}
 
-	return res.item
+	return r.item
 }
 
 // Sets the result payload to a successful result
