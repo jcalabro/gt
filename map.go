@@ -19,7 +19,7 @@ func NewSafeMap[K comparable, V any]() SafeMap[K, V] {
 }
 
 // Adds an item to the map, overwriting any existing value, if any
-func (m SafeMap[K, V]) Put(key K, val V) {
+func (m *SafeMap[K, V]) Put(key K, val V) {
 	m.mu.Lock()
 	defer m.mu.Unlock()
 
@@ -28,7 +28,7 @@ func (m SafeMap[K, V]) Put(key K, val V) {
 
 // Retrives the value from the map for the entry with the given key,
 // if any. Returns `None` if the item does not exist in the map.
-func (m SafeMap[K, V]) Get(key K) Option[V] {
+func (m *SafeMap[K, V]) Get(key K) Option[V] {
 	m.mu.RLock()
 	defer m.mu.RUnlock()
 

@@ -35,7 +35,9 @@ func TestSafeMap(t *testing.T) {
 func concurrentMapOperations(wg *sync.WaitGroup, m *gt.SafeMap[int, int]) {
 	defer wg.Done()
 
-	val := 100
-	m.Put(rand.Intn(val), rand.Intn(val))
-	_ = m.Get(rand.Intn(val))
+	for ndx := 0; ndx < 100; ndx++ {
+		val := 100
+		m.Put(rand.Intn(val), rand.Intn(val))
+		_ = m.Get(rand.Intn(val))
+	}
 }
