@@ -19,6 +19,10 @@ func TestLocked(t *testing.T) {
 		item, unlock := l.Get()
 		require.Equal(t, val, item)
 		unlock()
+
+		l.With(func(item int) {
+			require.Equal(t, val, item)
+		})
 	}
 
 	// test set
@@ -30,6 +34,10 @@ func TestLocked(t *testing.T) {
 		item, unlock := l.RGet()
 		require.Equal(t, val, item)
 		unlock()
+
+		l.RWith(func(item int) {
+			require.Equal(t, val, item)
+		})
 	}
 
 	// this will trigger the race detector reasonably reliably
@@ -54,5 +62,8 @@ func concurrentLockOperations(wg *sync.WaitGroup, l *gt.Locked[int]) {
 
 		_, unlock2 := l.RGet()
 		unlock2()
+
+		l.With(func(_ int) {})
+		l.RWith(func(_ int) {})
 	}
 }
