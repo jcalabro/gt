@@ -5,14 +5,14 @@ import "sync"
 // Locked wraps access to underlying data in a mutex such that retrieving the
 // data takes the mutex, then returning the data releases the mutex.
 type Locked[T any] struct {
-	mu   *sync.RWMutex
+	mu   sync.RWMutex
 	data T
 }
 
 // Returns a new Locked[T] that's ready for use
 func NewLocked[T any](data T) Locked[T] {
 	return Locked[T]{
-		mu:   &sync.RWMutex{},
+		mu:   sync.RWMutex{},
 		data: data,
 	}
 }

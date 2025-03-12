@@ -12,7 +12,6 @@ import (
 func TestLocked(t *testing.T) {
 	val := 123
 	l := gt.NewLocked(val)
-	require.NotNil(t, l)
 
 	{
 		// test exclusive lock get

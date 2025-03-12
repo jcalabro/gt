@@ -1,6 +1,8 @@
 package gt
 
-import "sync"
+import (
+	"sync"
+)
 
 // SafeMap is a thread-safe wrapper over Go's built in `map` type. This struct
 // should not be instantiated directly (i.e. SafeMap[int, int]{} is incorrect),
