@@ -11,10 +11,7 @@ type Locked[T any] struct {
 
 // Returns a new Locked[T] that's ready for use
 func NewLocked[T any](data T) Locked[T] {
-	return Locked[T]{
-		mu:   sync.RWMutex{},
-		data: data,
-	}
+	return Locked[T]{data: data}
 }
 
 // Takes an exclusive lock and sets the data to the given value
