@@ -33,9 +33,8 @@ func (l *Locked[T]) Get() (data T, unlock func()) {
 // Acquires an exclusive lock on the data for the duration of `f`
 func (l *Locked[T]) With(f func(T)) {
 	l.mu.Lock()
-	defer l.mu.Unlock()
-
 	f(l.data)
+	l.mu.Unlock()
 }
 
 // Acquires a shared lock on the data for the duration of `f`
@@ -50,7 +49,6 @@ func (l *Locked[T]) RGet() (data T, unlock func()) {
 // Acquires a shared lock on the data for the duration of `f`
 func (l *Locked[T]) RWith(f func(T)) {
 	l.mu.RLock()
-	defer l.mu.RUnlock()
-
 	f(l.data)
+	l.mu.RUnlock()
 }
