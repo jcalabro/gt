@@ -27,17 +27,16 @@ func TestSafeMap(t *testing.T) {
 	wg := &sync.WaitGroup{}
 	for ndx := 0; ndx < 1000; ndx++ {
 		wg.Add(1)
-		go concurrentMapOperations(wg, &m)
+
+		go func() {
+			defer wg.Done()
+
+			for ndx := 0; ndx < 100; ndx++ {
+				val := 100
+				m.Put(rand.Intn(val), rand.Intn(val))
+				_ = m.Get(rand.Intn(val))
+			}
+		}()
 	}
 	wg.Wait()
-}
-
-func concurrentMapOperations(wg *sync.WaitGroup, m *gt.SafeMap[int, int]) {
-	defer wg.Done()
-
-	for ndx := 0; ndx < 100; ndx++ {
-		val := 100
-		m.Put(rand.Intn(val), rand.Intn(val))
-		_ = m.Get(rand.Intn(val))
-	}
 }
