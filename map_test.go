@@ -14,20 +14,35 @@ func TestSafeMap(t *testing.T) {
 	val := 456
 
 	m := gt.NewSafeMap[int, int]()
-
+	require.Equal(t, 0, m.Size())
 	require.False(t, m.Get(key).HasVal())
 
-	m.Put(key, val)
-	item := m.Get(key)
-	require.True(t, item.HasVal())
-	require.Equal(t, val, item.Val())
+	{
+		// insert an item
+		m.Put(key, val)
+		require.Equal(t, 1, m.Size())
+
+		item := m.Get(key)
+		require.True(t, item.HasVal())
+		require.Equal(t, val, item.Val())
+	}
+
+	{
+		// overwrite the item
+		val2 := val + 1
+		m.Put(key, val2)
+		require.Equal(t, 1, m.Size())
+
+		item := m.Get(key)
+		require.True(t, item.HasVal())
+		require.Equal(t, val2, item.Val())
+	}
 
 	// this will trigger the race detector reasonably reliably
 	// if there is a race condition
 	wg := &sync.WaitGroup{}
 	for ndx := 0; ndx < 1000; ndx++ {
 		wg.Add(1)
-
 		go func() {
 			defer wg.Done()
 
@@ -35,6 +50,7 @@ func TestSafeMap(t *testing.T) {
 				val := 100
 				m.Put(rand.Intn(val), rand.Intn(val))
 				_ = m.Get(rand.Intn(val))
+				_ = m.Size()
 			}
 		}()
 	}

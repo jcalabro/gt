@@ -38,3 +38,10 @@ func (m *SafeMap[K, V]) Get(key K) Option[V] {
 	}
 	return None[V]()
 }
+
+func (m *SafeMap[K, V]) Size() int {
+	m.mu.RLock()
+	size := len(m.items)
+	m.mu.RUnlock()
+	return size
+}
