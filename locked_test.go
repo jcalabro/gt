@@ -42,7 +42,7 @@ func TestLocked(t *testing.T) {
 	// this will trigger the race detector reasonably reliably
 	// if there is a race condition
 	wg := &sync.WaitGroup{}
-	for ndx := 0; ndx < 1000; ndx++ {
+	for range 1000 {
 		wg.Add(1)
 		go concurrentLockOperations(wg, &l)
 	}
@@ -52,7 +52,7 @@ func TestLocked(t *testing.T) {
 func concurrentLockOperations(wg *sync.WaitGroup, l *gt.Locked[int]) {
 	defer wg.Done()
 
-	for ndx := 0; ndx < 100; ndx++ {
+	for range 100 {
 		val := 100
 		l.Set(rand.Intn(val))
 
