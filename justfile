@@ -3,7 +3,7 @@ set shell := ["bash", "-cu"]
 default: lint test
 
 install-tools:
-    go install github.com/golangci/golangci-lint/cmd/golangci-lint@v1.61.0
+    go install github.com/golangci/golangci-lint/v2/cmd/golangci-lint@v2.0.2
 
 lint:
     golangci-lint run --timeout 1m

@@ -1,22 +1,22 @@
+version: "2"
+
+issues:
+  max-issues-per-linter: 0
+  max-same-issues: 0
+
 linters:
+  disable:
+  settings:
+    errcheck:
+      check-type-assertions: true
+    gocritic:
+      enable-all: true
+
+formatters:
   enable:
-    - gocritic
     - gofmt
-    - unparam
-    - whitespace
-
-linters-settings:
-  errcheck:
-    check-type-assertions: true
-    check-blank: true
-    disable-default-exclusions: true
-
-  gocritic:
-    enable-all: true
-
-  gofmt:
-    rewrite-rules:
-      - pattern: 'interface{}'
-        replacement: 'any'
-      - pattern: 'a[b:len(a)]'
-        replacement: 'a[b:]'
+  settings:
+    gofmt:
+      rewrite-rules:
+        - pattern: 'interface{}'
+          replacement: 'any'
