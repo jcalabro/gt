@@ -5,7 +5,8 @@ issues:
   max-same-issues: 0
 
 linters:
-  disable:
+  enable:
+    - modernize
   settings:
     errcheck:
       check-type-assertions: true
