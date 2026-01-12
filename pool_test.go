@@ -39,3 +39,52 @@ func concurrentPoolOperations(wg *sync.WaitGroup, p *gt.Pool[*bytes.Buffer]) {
 		_ = p.Get()
 	}
 }
+
+func FuzzPool(f *testing.F) {
+	f.Add([]byte("hello"), uint8(1))
+	f.Add([]byte{}, uint8(4))
+	f.Add([]byte{0, 1, 2, 3}, uint8(8))
+	f.Add([]byte("test data for pool"), uint8(16))
+
+	f.Fuzz(func(t *testing.T, data []byte, numGoroutines uint8) {
+		// limit goroutines to a reasonable number
+		goroutines := int(numGoroutines%32) + 1
+
+		// create a pool that returns new byte slices
+		p := gt.NewPool(func() []byte {
+			return make([]byte, len(data))
+		})
+
+		// verify Get returns a valid slice from the New function
+		got := p.Get()
+		if got == nil {
+			t.Error("Get should return non-nil slice")
+		}
+		if len(got) != len(data) {
+			t.Errorf("expected slice of len %d, got %d", len(data), len(got))
+		}
+
+		// run concurrent Put/Get operations
+		wg := &sync.WaitGroup{}
+		for range goroutines {
+			wg.Add(1)
+			go func(input []byte) {
+				defer wg.Done()
+
+				for range 10 {
+					// Put a copy of the input data
+					buf := make([]byte, len(input))
+					copy(buf, input)
+					p.Put(buf)
+
+					// Get should always return a non-nil slice
+					result := p.Get()
+					if result == nil {
+						t.Error("Get returned nil")
+					}
+				}
+			}(data)
+		}
+		wg.Wait()
+	})
+}
