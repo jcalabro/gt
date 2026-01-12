@@ -28,7 +28,7 @@ func (r Result[T]) Match() any {
 	return r.item
 }
 
-// Sets the  payload to a successful result
+// Sets the payload to a successful result
 func OK[T any](item T) Result[T] {
 	return Result[T]{item: item}
 }
