@@ -28,3 +28,8 @@ func Some[T any](item T) Option[T] {
 func None[T any]() Option[T] {
 	return Option[T]{hasValue: false}
 }
+
+// Returns true if the Option has no value set
+func (o Option[T]) IsNone() bool {
+	return !o.hasValue
+}

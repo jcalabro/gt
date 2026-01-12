@@ -37,3 +37,18 @@ func OK[T any](item T) Result[T] {
 func Err[T any](err error) Result[T] {
 	return Result[T]{err: err}
 }
+
+// Returns true if the Result contains a value (no error)
+func (r Result[T]) IsOK() bool {
+	return r.err == nil
+}
+
+// Returns true if the Result contains an error
+func (r Result[T]) IsErr() bool {
+	return r.err != nil
+}
+
+// Returns the value and error for standard Go error handling patterns
+func (r Result[T]) Unwrap() (T, error) {
+	return r.item, r.err
+}

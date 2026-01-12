@@ -14,6 +14,8 @@ func TestResultType(t *testing.T) {
 		res := gt.OK(val)
 		require.NoError(t, res.Err())
 		require.Equal(t, val, res.OK())
+		require.True(t, res.IsOK())
+		require.False(t, res.IsErr())
 
 		switch r := res.Match().(type) {
 		case error:
@@ -27,6 +29,8 @@ func TestResultType(t *testing.T) {
 		err := errors.New("test error")
 		res := gt.Err[int](err)
 		require.ErrorIs(t, res.Err(), err)
+		require.False(t, res.IsOK())
+		require.True(t, res.IsErr())
 
 		switch r := res.Match().(type) {
 		case error:
@@ -43,5 +47,25 @@ func TestResultType(t *testing.T) {
 			}
 		}()
 		require.Equal(t, 0, res.OK())
+	}
+}
+
+func TestResultUnwrap(t *testing.T) {
+	{
+		// Unwrap returns value and nil error for OK result
+		val := 42
+		res := gt.OK(val)
+		v, err := res.Unwrap()
+		require.Equal(t, val, v)
+		require.NoError(t, err)
+	}
+
+	{
+		// Unwrap returns zero value and error for Err result
+		testErr := errors.New("test error")
+		res := gt.Err[int](testErr)
+		v, err := res.Unwrap()
+		require.Equal(t, 0, v)
+		require.ErrorIs(t, err, testErr)
 	}
 }
