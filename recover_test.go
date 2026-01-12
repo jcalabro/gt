@@ -30,6 +30,17 @@ func TestRecover(t *testing.T) {
 		require.NotErrorIs(t, err, testErr)
 	}
 
+	{
+		// test panic+recover with a string preserves the panic message
+		panicMsg := "specific panic message"
+		err := func() (err error) {
+			defer func() { err = gt.Recover(nil, recover()) }()
+			panic(panicMsg)
+		}()
+		require.Error(t, err)
+		require.Contains(t, err.Error(), panicMsg)
+	}
+
 	myFunc := func(input error) (err error) {
 		defer func() { err = gt.Recover(input, recover()) }()
 		return nil

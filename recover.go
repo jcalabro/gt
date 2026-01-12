@@ -13,7 +13,7 @@ func Recover(e error, rec any) error {
 		if err, ok := rec.(error); ok {
 			return err
 		} else {
-			return fmt.Errorf("caught panic: %w", e)
+			return fmt.Errorf("caught panic: %v", rec)
 		}
 	}
 
