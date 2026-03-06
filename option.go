@@ -14,7 +14,7 @@ func (o Option[T]) HasVal() bool {
 // Returns the value of the Option. Panics if the Option has no value
 func (o Option[T]) Val() T {
 	if !o.hasValue {
-		panic("option has no value set, but Get() was called")
+		panic("option has no value set, but Val() was called")
 	}
 	return o.item
 }
