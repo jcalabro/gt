@@ -15,6 +15,30 @@ func TestOptionType(t *testing.T) {
 		require.True(t, opt.HasVal())
 		require.False(t, opt.IsNone())
 		require.Equal(t, val, opt.Val())
+		require.Equal(t, val, opt.ValOr(0))
+	}
+
+	{
+		opt := gt.None[int]()
+		require.Equal(t, 99, opt.ValOr(99))
+	}
+
+	type thing struct {
+		Name string
+	}
+
+	{
+		val := thing{Name: "hello"}
+		fallback := thing{Name: "fallback"}
+		require.Equal(t, val, gt.Some(val).ValOr(fallback))
+		require.Equal(t, fallback, gt.None[thing]().ValOr(fallback))
+	}
+
+	{
+		val := &thing{Name: "hello"}
+		fallback := &thing{Name: "fallback"}
+		require.Equal(t, val, gt.Some(val).ValOr(fallback))
+		require.Equal(t, fallback, gt.None[*thing]().ValOr(fallback))
 	}
 
 	{

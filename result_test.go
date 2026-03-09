@@ -14,6 +14,7 @@ func TestResultType(t *testing.T) {
 		res := gt.OK(val)
 		require.NoError(t, res.Err())
 		require.Equal(t, val, res.OK())
+		require.Equal(t, val, res.OKOr(0))
 		require.True(t, res.IsOK())
 		require.False(t, res.IsErr())
 
@@ -38,7 +39,34 @@ func TestResultType(t *testing.T) {
 		default:
 			require.FailNow(t, "match arm should not be a value")
 		}
+	}
 
+	{
+		err := errors.New("fail")
+		require.Equal(t, 99, gt.Err[int](err).OKOr(99))
+	}
+
+	type thing struct {
+		Name string
+	}
+
+	{
+		val := thing{Name: "hello"}
+		fallback := thing{Name: "fallback"}
+		require.Equal(t, val, gt.OK(val).OKOr(fallback))
+		require.Equal(t, fallback, gt.Err[thing](errors.New("fail")).OKOr(fallback))
+	}
+
+	{
+		val := &thing{Name: "hello"}
+		fallback := &thing{Name: "fallback"}
+		require.Equal(t, val, gt.OK(val).OKOr(fallback))
+		require.Equal(t, fallback, gt.Err[*thing](errors.New("fail")).OKOr(fallback))
+	}
+
+	{
+		// Panic test must be last since defers are function-scoped.
+		res := gt.Err[int](errors.New("test error"))
 		recoverCalled := false
 		defer func() { require.True(t, recoverCalled) }()
 		defer func() {

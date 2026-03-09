@@ -28,6 +28,14 @@ func (r Result[T]) Match() any {
 	return r.item
 }
 
+// Returns the value of the Result, or the fallback if an error is set.
+func (r Result[T]) OKOr(fallback T) T {
+	if r.err != nil {
+		return fallback
+	}
+	return r.item
+}
+
 // Sets the payload to a successful result
 func OK[T any](item T) Result[T] {
 	return Result[T]{item: item}

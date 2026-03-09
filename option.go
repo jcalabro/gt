@@ -21,6 +21,14 @@ func (o Option[T]) Val() T {
 	return o.item
 }
 
+// Returns the value of the Option, or the fallback if the Option has no value.
+func (o Option[T]) ValOr(fallback T) T {
+	if !o.hasValue {
+		return fallback
+	}
+	return o.item
+}
+
 // Sets the Option with the given value
 func Some[T any](item T) Option[T] {
 	return Option[T]{hasValue: true, item: item}
