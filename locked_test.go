@@ -6,7 +6,6 @@ import (
 	"testing"
 
 	"github.com/jcalabro/gt"
-	"github.com/stretchr/testify/require"
 )
 
 func TestLocked(t *testing.T) {

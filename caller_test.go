@@ -2,8 +2,6 @@ package gt
 
 import (
 	"testing"
-
-	"github.com/stretchr/testify/require"
 )
 
 func TestCallerName(t *testing.T) {
