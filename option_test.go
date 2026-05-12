@@ -106,8 +106,8 @@ func TestOptionJSON_SomeBool(t *testing.T) {
 func TestOptionJSON_InStruct(t *testing.T) {
 	type Profile struct {
 		Name   string            `json:"name"`
-		Avatar gt.Option[string] `json:"avatar,omitempty"`
-		Age    gt.Option[int64]  `json:"age,omitempty"`
+		Avatar gt.Option[string] `json:"avatar,omitzero"`
+		Age    gt.Option[int64]  `json:"age,omitzero"`
 	}
 
 	// With values.

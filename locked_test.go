@@ -88,10 +88,7 @@ func FuzzLocked(f *testing.F) {
 		// run concurrent operations
 		wg := &sync.WaitGroup{}
 		for range goroutines {
-			wg.Add(1)
-			go func() {
-				defer wg.Done()
-
+			wg.Go(func() {
 				// Set a value and verify we can read it back through With
 				l.Set(initialVal + 1)
 
@@ -107,7 +104,7 @@ func FuzzLocked(f *testing.F) {
 
 				_, unlock := l.RGet()
 				unlock()
-			}()
+			})
 		}
 		wg.Wait()
 	})
