@@ -3,7 +3,8 @@ package gt
 import (
 	"context"
 	"errors"
-	"sync"
+
+	"golang.org/x/sync/errgroup"
 )
 
 // Same as ConcurrentN, using 50 worker goroutines.
@@ -24,40 +25,37 @@ func ConcurrentN[T, V any](ctx context.Context, items []T, workers int, fn func(
 		return nil, errors.New("concurrent workers must be greater than 0")
 	}
 
-	sem := make(chan struct{}, workers)
 	results := make([]V, len(items))
 	errs := make([]error, len(items))
 
-	var wg sync.WaitGroup
+	var g errgroup.Group
+	g.SetLimit(workers)
+
 	for i, item := range items {
-		select {
-		case <-ctx.Done():
-			wg.Wait()
-			return nil, ctx.Err()
-		case sem <- struct{}{}:
+		if err := ctx.Err(); err != nil {
+			// Stop dispatching new work on cancellation, but let anything
+			// already running finish so we don't leak goroutines.
+			_ = g.Wait()
+			return nil, err
 		}
 
-		wg.Add(1)
-		go func(idx int, it T) {
-			defer func() {
-				<-sem
-				wg.Done()
-			}()
+		g.Go(func() (retErr error) {
+			defer func() { errs[i] = Recover(retErr, recover()) }()
 
-			var err error
-			defer func() {
-				errs[idx] = Recover(err, recover())
-			}()
-
-			res, err := fn(it)
+			res, err := fn(item)
 			if err != nil {
-				return
+				return err
 			}
-			results[idx] = res
-		}(i, item)
+
+			results[i] = res
+			return nil
+		})
 	}
 
-	wg.Wait()
+	// g.Wait returns the first non-nil error from g.Go closures, but we want
+	// every error joined. Swallow Wait's return and build the joined error
+	// ourselves from the per-index slice.
+	_ = g.Wait()
 
 	if err := errors.Join(errs...); err != nil {
 		return nil, err

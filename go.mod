@@ -1,3 +1,5 @@
 module github.com/jcalabro/gt
 
-go 1.23.2
+go 1.25.0
+
+require golang.org/x/sync v0.20.0
